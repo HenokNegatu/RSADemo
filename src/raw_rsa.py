@@ -73,10 +73,12 @@ class RSA:
         text = ''.join([chr(char) for char in plain])
         return text
     
-    def encryptPipline(self,public_key, fileByte):
-        return self.encrypt(public_key, fileByte)
+    def encryptPipline(self, fileByte):
+        print(f'Public key pair {self.public} Private key pair {self.private}')
+        return self.encrypt(self.public, fileByte)
     
     def decryptPipline(self, cipher):
+        print('decrypting file byte...')
         return self.decrypt(self.private, cipher)
 
 if __name__ == "__main__": 

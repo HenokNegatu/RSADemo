@@ -1,46 +1,42 @@
 import socket
-import RSA from rda
-# Define server and client behavior (modify for your needs)
-SERVER_ADDRESS = ('localhost', 5000)  # Server address and port
-filename = 'data.txt'  # File to exchange (same on both sides)
+import rsa
+import pickle
 
-def send_file(address, filename):
-  """
-  Sends a file to the specified address using a socket connection.
-  """
-  sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+HOST = 'localhost'  # Replace with server's IP address if needed
+PORT = 5000         # Server port
+
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.bind((HOST, PORT))
+server_socket.listen(1)  # Only allow one connection at a time
+print(f"Server listening on {HOST}:{PORT}")
+
+#key generation phase
+encdec = rsa.RSA()
+(public, private)=encdec.generate_keypair()
+print(f"public {public}, private {private}")
+
+while True:
+  client_socket, address = server_socket.accept()
+  print(f"Connected by {address[0]}")
   try:
-    sock.connect(address)
-    # Open the file in binary mode for any kind of data
-    with open(filename, 'rb') as f:
-      data = f.read()
-      sock.sendall(data)
+
+    #key exchange phase
+    client_public_key = pickle.loads(client_socket.recv(1024))
+    print(f'recieved clients public key {client_public_key}')
+    client_socket.send(pickle.dumps(public))
+
+    while True:
+      # Receive message from client
+      message = pickle.loads(client_socket.recv(1024))
+      message = encdec.decryptPipline(message)
+      if message:
+        # Send response to client
+        response = f"Server: {message}"
+        client_socket.sendall(pickle.dumps(response))
+      else:
+        break  # Client disconnected
+  except ConnectionAbortedError:
+    pass  # Handle client disconnection gracefully
   finally:
-    sock.close()
-
-def receive_file(address, filename):
-  """
-  Receives a file from the specified address using a socket connection.
-  """
-  sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  try:
-    sock.bind(address)  # Bind to the address for receiving
-    sock.listen(1)
-    conn, addr = sock.accept()
-    with open(filename, 'wb') as f:
-      data = conn.recv(1024)  # Receive data in chunks
-      while data:
-        f.write(data)
-        data = conn.recv(1024)
-  finally:
-    sock.close()
-
-# Example usage (uncomment for server or client mode)
-
-# Server mode (listens for incoming connections)
-# receive_file(SERVER_ADDRESS, filename)
-
-# Client mode (sends the file)
-send_file(SERVER_ADDRESS, filename)
-
-print(f"File exchange for '{filename}' completed.")
+    client_socket.close()
+    print(f"Client {address[0]} disconnected")
