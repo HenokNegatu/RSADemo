@@ -19,7 +19,7 @@ class RSA:
 
     def gcd(self, a, b):
         """
-        This function calculates the greatest common divisor (GCD) of two numbers.
+        calculate the greatest common divisor (GCD) of two numbers.
         """
         while b != 0:
             a, b = b, a % b
@@ -31,7 +31,7 @@ class RSA:
         """
         while True:
             # Focus on odd numbers (except 2, the only even prime)
-            num = randint(2, 100)  # You can adjust the upper limit for larger primes
+            num = randint(2, 100) 
             if num % 2 != 0 and self.is_prime(num):
                 return num
             
