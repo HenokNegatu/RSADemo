@@ -6,7 +6,7 @@ this was my computer network security course simple project, i hope it will give
 the code needs no explanation, its pretty much self explanatory code, in addition i have added adequate comments to help you understand better.
 
 ### here is how to do the demo
-- first clone the ripo, if you don't know how to clone then what are you doing here!🤨🤔 
+- first clone the repo, if you don't know how to clone then what are you doing here!🤨🤔 
 - run the server code first
 ```
 python server.py
