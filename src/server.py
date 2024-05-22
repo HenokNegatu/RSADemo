@@ -3,7 +3,7 @@ import rsa
 import pickle
 from colorama import Fore, Back, Style
 
-HOST = 'localhost'  # Replace with server's IP address if needed
+HOST = 'localhost'  # server's IP address
 PORT = 5000         # Server port
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

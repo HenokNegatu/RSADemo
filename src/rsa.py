@@ -6,7 +6,7 @@ class RSA:
         self.private = ""
         self.public = ""
     """
-    This function checks if a number is prime (has exactly two divisors: 1 and itself).
+    check if a number is prime.
     """
     def is_prime(self, num):
     
@@ -31,7 +31,7 @@ class RSA:
         """
         while True:
             # Focus on odd numbers (except 2, the only even prime)
-            num = randint(2, 100) 
+            num = randint(2, 100)  # You can adjust the upper limit for larger primes
             if num % 2 != 0 and self.is_prime(num):
                 return num
             
